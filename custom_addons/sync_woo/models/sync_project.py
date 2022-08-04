@@ -6,10 +6,10 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
+
 class SyncProjectWoo(models.Model):
 
-    _inherit = "sync.project"
-    eval_context = fields.Selection(selection_add=[("woo", "WooCommerce")])
+    _inherit = "sync.project.context"
 
     @api.model
     def _eval_context_woo(self, secrets, eval_context):

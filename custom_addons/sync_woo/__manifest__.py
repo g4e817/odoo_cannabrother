@@ -14,7 +14,7 @@
     "license": "Other OSI approved licence",  # MIT
     "depends": ["sync", "sale"],
     "external_dependencies": {"python": ["woocommerce"], "bin": []},
-    "data": ["data/sync_project_data.xml"],
+    "data": ["data/sync_project_context.xml","data/sync_project_data.xml"],
     "demo": [],
     "qweb": [],
     "post_load": None,
