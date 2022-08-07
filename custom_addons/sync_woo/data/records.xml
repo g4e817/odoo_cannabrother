@@ -1,13 +1,17 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version='1.0' encoding='UTF-8' ?>
 <!-- Copyright 2021 Ivan Yelizariev <https://twitter.com/yelizariev>
      License MIT (https://opensource.org/licenses/MIT). -->
 <odoo>
     <record id="woo_sync-project" model="sync.project">
         <field name="name">WooCommerce</field>
         <field name="active" eval="False" />
-        <field name="eval_context_ids" eval="[(4, ref('sync_woo.sync_project_context_woo'))]" />
-        <field name="common_code">
-            <![CDATA[
+         <field
+            name="eval_context_ids"
+            eval="[(4, ref('sync_woo.sync_project_context_woo'))]"
+        />
+        <field
+            name="common_code"
+        ><![CDATA[
 PRODUCT_REL = "woo_product"
 ORDER_REL = "woo_order"
 TAXE_REL ="woo_taxe"
@@ -394,8 +398,7 @@ PRODUCT_SYNC = {
         "update": odoo_customer_update,
     }
 }
-]]>
-        </field>
+]]></field>
     </record>
     <record id="api-key--project-secret-parameter" model="sync.project.secret">
         <field name="key">API_KEY</field>
@@ -442,8 +445,9 @@ PRODUCT_SYNC = {
         <field name="name">Sync WooCommerce products to Odoo</field>
         <field name="active" eval="True" />
         <field name="project_id" ref="woo_sync-project" />
-        <field name="code">
-            <![CDATA[
+        <field
+            name="code"
+        ><![CDATA[
 def handle_cron():
     _sync_x2odoo(create=True, update=True)
 
@@ -486,8 +490,7 @@ def handle_webhook(httprequest):
         # TODO
         pass
 
-]]>
-        </field>
+]]></field>
     </record>
     <record id="CREATE_PRODUCTS_WOO2ODOO_manual-trigger" model="sync.trigger.button">
         <field name="trigger_name">CREATE_PRODUCTS_WOO2ODOO</field>
@@ -539,8 +542,9 @@ def handle_webhook(httprequest):
         <field name="name">Sync Odoo products to WooCommerce</field>
         <field name="active" eval="True" />
         <field name="project_id" ref="woo_sync-project" />
-        <field name="code">
-            <![CDATA[
+        <field
+            name="code"
+        ><![CDATA[
 def handle_cron():
     _sync_odoo2x(create=True, update=True)
 
@@ -562,8 +566,7 @@ def handle_db(records):
 def _sync_odoo2x(create=False, update=False):
     return sync_odoo2x(odoo_product_get_all(to_create=create, to_update=update), PRODUCT_SYNC, create=create, update=update)
 
-        ]]>
-        </field>
+        ]]></field>
     </record>
     <record id="CREATE_PRODUCTS_ODOO2WOO_manual-trigger" model="sync.trigger.button">
         <field name="trigger_name">CREATE_PRODUCTS_ODOO2WOO</field>
@@ -597,11 +600,12 @@ def _sync_odoo2x(create=False, update=False):
         <field name="trigger">on_create</field>
     </record>
     <record id="sync-woo-orders-to-odoo_sync-task" model="sync.task">
-        <field name="name">Sync WooCommerce orders to Odoo</field>
-        <field name="active" eval="True" />
-        <field name="project_id" ref="woo_sync-project" />
-        <field name="code">
-            <![CDATA[
+    <field name="name">Sync WooCommerce orders to Odoo</field>
+    <field name="active" eval="True" />
+    <field name="project_id" ref="woo_sync-project" />
+    <field
+        name="code"
+    ><![CDATA[
 def handle_cron():
     _sync_orderx2odoo(create=True, update=True)
 
@@ -621,10 +625,10 @@ def _sync_orderx2odoo(create=False, update=False):
 
 def setup_woo_webhooks():
     for topic, webhook in (
-        ("order.created", webhooks.WOO_ORDER_CREATED),
-        ("order.updated", webhooks.WOO_ORDER_UPDATED),
-        ("order.deleted", webhooks.WOO_ORDER_DELETED)
-        ):
+    ("order.created", webhooks.WOO_ORDER_CREATED),
+    ("order.updated", webhooks.WOO_ORDER_UPDATED),
+    ("order.deleted", webhooks.WOO_ORDER_DELETED)
+    ):
         data = {
         "name": topic,
         "topic": topic,
@@ -644,66 +648,72 @@ def handle_webhook(httprequest):
         # TODO
         pass
 
-]]>
-        </field>
-    </record>
+]]></field>
     <record id="CREATE_ORDERS_WOO2ODOO_manual-trigger" model="sync.trigger.button">
-        <field name="trigger_name">CREATE_ORDERS_WOO2ODOO</field>
-        <field name="name">Fetch all records from woo and create new ones in Odoo</field>
-        <field name="sync_task_id" ref="sync-woo-orders-to-odoo_sync-task" />
-    </record>
-    <record id="UPDATE_ORDERS_WOO2ODOO_manual-trigger" model="sync.trigger.button">
-        <field name="trigger_name">UPDATE_ORDERS_WOO2ODOO</field>
-        <field name="name">Fetch all records from woo  records and update corresponding records in Odoo</field>
-        <field name="sync_task_id" ref="sync-woo-orders-to-odoo_sync-task" />
-    </record>
-    <record id="setup-woo-webhooks--manual-trigger" model="sync.trigger.button">
-        <field name="trigger_name">SETUP_WOO_WEBHOOKS</field>
-        <field name="name">Configure WooCommerce to notify Odoo on updates in WooCommerce</field>
-        <field name="sync_task_id" ref="sync-woo-orders-to-odoo_sync-task" />
-    </record>
+    <field name="trigger_name">CREATE_ORDERS_WOO2ODOO</field>
+    <field name="name">
+        Fetch all records from woo and create new ones in Odoo
+    </field>
+    <field name="sync_task_id" ref="sync-woo-orders-to-odoo_sync-task" />
+</record>
+<record id="UPDATE_ORDERS_WOO2ODOO_manual-trigger" model="sync.trigger.button">
+    <field name="trigger_name">UPDATE_ORDERS_WOO2ODOO</field>
+    <field name="name">
+        Fetch all records from woo  records and update corresponding records in Odoo
+    </field>
+    <field name="sync_task_id" ref="sync-woo-orders-to-odoo_sync-task" />
+</record>
+<record id="setup-woo-webhooks--manual-trigger" model="sync.trigger.button">
+    <field name="trigger_name">SETUP_WOO_WEBHOOKS</field>
+    <field name="name">
+        Configure WooCommerce to notify Odoo on updates in WooCommerce
+    </field>
+    <field name="sync_task_id" ref="sync-woo-orders-to-odoo_sync-task" />
+</record>
 
-    <record id="CRON_ORDERS_WOO2ODOO_cron-trigger" model="sync.trigger.cron">
-        <field name="trigger_name">CRON_ORDERS_WOO2ODOO</field>
-        <field name="active" eval="False" />
-        <field name="sync_task_id" ref="sync-woo-orders-to-odoo_sync-task" />
-        <field name="interval_number">1</field>
-        <field name="interval_type">months</field>
-    </record>
-    <record id="woo-orders-updates--webhook-trigger" model="sync.trigger.webhook">
-        <field name="trigger_name">WOO_ORDER_CREATED</field>
-        <field name="active" eval="True" />
-        <field name="name">Webhook</field>
-        <field name="sync_task_id" ref="sync-woo-orders-to-odoo_sync-task" />
-    </record>
-    <record id="woo-order-updated--webhook-trigger" model="sync.trigger.webhook">
-        <field name="trigger_name">WOO_ORDER_UPDATED</field>
-        <field name="active" eval="True" />
-        <field name="name">Webhook</field>
-        <field name="sync_task_id" ref="sync-woo-orders-to-odoo_sync-task" />
-    </record>
-    <record id="woo-order-deleted--webhook-trigger" model="sync.trigger.webhook">
-        <field name="trigger_name">WOO_ORDER_DELETED</field>
-        <field name="active" eval="True" />
-        <field name="name">Webhook</field>
-        <field name="sync_task_id" ref="sync-woo-orders-to-odoo_sync-task" />
-    </record>
-    <record id="sync-odoo-orders-to-woo_sync-task" model="sync.task">
-        <field name="name">Sync Odoo orders to WooCommerce</field>
-        <field name="active" eval="True" />
-        <field name="project_id" ref="woo_sync-project" />
-        <field name="code">
-            <![CDATA[
+</record>
+<record id="CRON_ORDERS_WOO2ODOO_cron-trigger" model="sync.trigger.cron">
+    <field name="trigger_name">CRON_ORDERS_WOO2ODOO</field>
+    <field name="active" eval="False" />
+    <field name="sync_task_id" ref="sync-woo-orders-to-odoo_sync-task" />
+    <field name="interval_number">1</field>
+    <field name="interval_type">months</field>
+</record>
+<record id="woo-orders-updates--webhook-trigger" model="sync.trigger.webhook">
+    <field name="trigger_name">WOO_ORDER_CREATED</field>
+    <field name="active" eval="True" />
+    <field name="name">Webhook</field>
+    <field name="sync_task_id" ref="sync-woo-orders-to-odoo_sync-task" />
+</record>
+<record id="woo-order-updated--webhook-trigger" model="sync.trigger.webhook">
+    <field name="trigger_name">WOO_ORDER_UPDATED</field>
+    <field name="active" eval="True" />
+    <field name="name">Webhook</field>
+    <field name="sync_task_id" ref="sync-woo-orders-to-odoo_sync-task" />
+</record>
+<record id="woo-order-deleted--webhook-trigger" model="sync.trigger.webhook">
+    <field name="trigger_name">WOO_ORDER_DELETED</field>
+    <field name="active" eval="True" />
+    <field name="name">Webhook</field>
+    <field name="sync_task_id" ref="sync-woo-orders-to-odoo_sync-task" />
+</record>
+<record id="sync-odoo-orders-to-woo_sync-task" model="sync.task">
+    <field name="name">Sync Odoo orders to WooCommerce</field>
+    <field name="active" eval="True" />
+    <field name="project_id" ref="woo_sync-project" />
+    <field
+        name="code"
+    ><![CDATA[
 def handle_cron():
     _sync_odoo2x(create=True, update=True)
 
 def handle_button():
-    if trigger == "UPDATE_ORDERS_ODOO2WOO":
-        _sync_odoo2x(update=True)
-    elif trigger == "CREATE_ORDERS_ODOO2WOO":
-        _sync_odoo2x(create=True)
-    else:
-        raise Exception("Unknown button: %s" % trigger)
+if trigger == "UPDATE_ORDERS_ODOO2WOO":
+    _sync_odoo2x(update=True)
+elif trigger == "CREATE_ORDERS_ODOO2WOO":
+    _sync_odoo2x(create=True)
+else:
+    raise Exception("Unknown button: %s" % trigger)
 
 def handle_db(records):
     if trigger == "ODOO_ORDERS_CREATE":
@@ -716,38 +726,37 @@ def _sync_odoo2x(create=False, update=False):
     return sync_odoo2x(odoo_order_get_all(to_create=create, to_update=update), ORDER_SYNC, create=create, update=update)
 
 
-    ]]>
-        </field>
-    </record>
-    <record id="CREATE_ORDERS_ODOO2WOO_manual-trigger" model="sync.trigger.button">
-        <field name="trigger_name">CREATE_ORDERS_ODOO2WOO</field>
-        <field name="name">Push new (unlinked) odoo records to woo</field>
-        <field name="sync_task_id" ref="sync-odoo-orders-to-woo_sync-task" />
-    </record>
-    <record id="UPDATE_ORDERS_ODOO2WOO_manual-trigger" model="sync.trigger.button">
-        <field name="trigger_name">UPDATE_ORDERS_ODOO2WOO</field>
-        <field name="name">Push updates of linked records to woo</field>
-        <field name="sync_task_id" ref="sync-odoo-orders-to-woo_sync-task" />
-    </record>
-    <record id="CRON_ORDERS_ODOO2WOO_cron-trigger" model="sync.trigger.cron">
-        <field name="trigger_name">CRON_ORDERS_ODOO2WOO</field>
-        <field name="active" eval="False" />
-        <field name="sync_task_id" ref="sync-odoo-orders-to-woo_sync-task" />
-        <field name="interval_number">1</field>
-        <field name="interval_type">months</field>
-    </record>
-    <record id="ODOO_ORDERS_UPDATE_db-trigger" model="sync.trigger.automation">
-        <field name="trigger_name">ODOO_ORDERS_UPDATE</field>
-        <field name="active" eval="False" />
-        <field name="sync_task_id" ref="sync-odoo-orders-to-woo_sync-task" />
-        <field name="model_id" ref="sale.model_sale_order" />
-        <field name="trigger">on_write</field>
-    </record>
-    <record id="odoo-orders-create--db-trigger" model="sync.trigger.automation">
-        <field name="trigger_name">ODOO_ORDERS_CREATE</field>
-        <field name="active" eval="False" />
-        <field name="sync_task_id" ref="sync-odoo-orders-to-woo_sync-task" />
-        <field name="model_id" ref="sale.model_sale_order" />
-        <field name="trigger">on_create</field>
-    </record>
+    ]]></field>
+</record>
+<record id="CREATE_ORDERS_ODOO2WOO_manual-trigger" model="sync.trigger.button">
+    <field name="trigger_name">CREATE_ORDERS_ODOO2WOO</field>
+    <field name="name">Push new (unlinked) odoo records to woo</field>
+    <field name="sync_task_id" ref="sync-odoo-orders-to-woo_sync-task" />
+</record>
+<record id="UPDATE_ORDERS_ODOO2WOO_manual-trigger" model="sync.trigger.button">
+    <field name="trigger_name">UPDATE_ORDERS_ODOO2WOO</field>
+    <field name="name">Push updates of linked records to woo</field>
+    <field name="sync_task_id" ref="sync-odoo-orders-to-woo_sync-task" />
+</record>
+<record id="CRON_ORDERS_ODOO2WOO_cron-trigger" model="sync.trigger.cron">
+    <field name="trigger_name">CRON_ORDERS_ODOO2WOO</field>
+    <field name="active" eval="False" />
+    <field name="sync_task_id" ref="sync-odoo-orders-to-woo_sync-task" />
+    <field name="interval_number">1</field>
+    <field name="interval_type">months</field>
+</record>
+<record id="ODOO_ORDERS_UPDATE_db-trigger" model="sync.trigger.automation">
+    <field name="trigger_name">ODOO_ORDERS_UPDATE</field>
+    <field name="active" eval="False" />
+    <field name="sync_task_id" ref="sync-odoo-orders-to-woo_sync-task" />
+    <field name="model_id" ref="account.model_order_order" />
+    <field name="trigger">on_write</field>
+</record>
+<record id="odoo-orders-create--db-trigger" model="sync.trigger.automation">
+    <field name="trigger_name">ODOO_ORDERS_CREATE</field>
+    <field name="active" eval="False" />
+    <field name="sync_task_id" ref="sync-odoo-orders-to-woo_sync-task" />
+    <field name="model_id" ref="account.model_order_order" />
+    <field name="trigger">on_create</field>
+</record>
 </odoo>
