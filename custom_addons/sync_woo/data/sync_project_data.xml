@@ -10,7 +10,7 @@
             <![CDATA[
 PRODUCT_REL = "woo_product"
 ORDER_REL = "woo_order"
-TAXE_REL ="woo_taxe"
+TAX_REL ="woo_taxe"
 CUSTOMER_REL ="woo_customer"
 
 def product_x2odoo(data):
