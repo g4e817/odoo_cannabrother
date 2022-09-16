@@ -64,7 +64,7 @@ class ZeepWebServiceClient:
         client = self.client
         ou_recipient_address_type = client.get_type('ns1:AddressRow')
         self.country_id = res_partner.country_id.code
-        company_name =  res_partner.custom_companyname or res_partner.company_name
+        company_name = res_partner.company_name
         if company_name:
             ou_recipient_address = ou_recipient_address_type(Name1=company_name,
                                                             Name2=res_partner.name,
@@ -92,7 +92,7 @@ class ZeepWebServiceClient:
             if not information_available:
                 # We set this because otherwise the post api tells us that this is missing
                 # TODO: Check if this is the correct way to do
-                ou_recipient_address.Tel1 = "+43722480574"
+                ou_recipient_address.Tel1 = "+436602306177"
 
         return ou_recipient_address
 
