@@ -71,7 +71,7 @@
                 <button name="action_cancel" position="after">
                     <button name="action_assign_user" string="Mir zuweisen"
                             groups="base.group_user" type="object"
-                            attrs="{'invisible' : ['|', ('picking_type_code', '!=', 'outgoing'), '|', ('assignee_status', '!=', 'open')]}"/>
+                            attrs="{'invisible' : ['|', ('picking_type_code', '!=', 'outgoing'), ('assignee_status', '!=', 'open')]}"/>
 
                     <button name="action_post_label" string="Label generieren"
                             groups="base.group_user" type="object"
