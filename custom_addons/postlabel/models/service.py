@@ -13,9 +13,9 @@ class ZeepWebServiceClient:
             self.wsdl = 'https://abn-plc.post.at/DataService/Post.Webservice/ShippingService.svc?WSDL'
 
 
-        self.clientId = 21118160
-        self.orgUnitId = 1400404
-        self.orgUnitGUID = UUID('dcf3eeec-49c3-48dd-90d4-ec3f55b93432')
+        self.clientId = 21229941
+        self.orgUnitId = 58053489
+        self.orgUnitGUID = UUID('531588f8-7aaf-4897-aae9-c01c97c2f432')
         self.client = None
         self.country_id = None
         self.initClient()
