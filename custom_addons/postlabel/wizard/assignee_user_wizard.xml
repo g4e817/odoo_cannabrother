@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_assignee_post_label" model="ir.ui.view">
+        <field name="name">stock.assignee.view.form</field>
+        <field name="model">stock.assignee.user</field>
+        <field name="arch" type="xml">
+            <form string="Label generieren?">
+                <group>
+                    <p>
+                        Es wurde noch kein Benutzer zugewiesen oder Label generiert, jetzt Benutzer zuweisen und/oder Label generieren?
+                    </p>
+                </group>
+                <footer>
+                    <button name="process" string="Generieren" type="object" class="btn-primary"/>
+                    <button string="Abbrechen" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

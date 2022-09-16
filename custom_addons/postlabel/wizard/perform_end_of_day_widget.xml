@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_performendofday_post_label" model="ir.ui.view">
+        <field name="name">stock.picking.performendofday.view.form</field>
+        <field name="model">stock.picking.performendofday</field>
+        <field name="arch" type="xml">
+            <form string="Tagesabschluss generieren?">
+                <group>
+                    <p>
+                        Generiere jetzt deinen Tagesabschluss für die Post.
+                    </p>
+                    
+                        
+                </group>
+                <group>
+                    <field name="name" class="oe_inline"/>
+                </group>
+                <footer>
+                    <button name="process" string="Generieren" type="object" class="btn-primary"/>
+                    <button string="Abbrechen" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
