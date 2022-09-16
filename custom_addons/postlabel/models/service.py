@@ -14,8 +14,8 @@ class ZeepWebServiceClient:
 
 
         self.clientId = 21229941
-        self.orgUnitId = 58053489
-        self.orgUnitGUID = UUID('531588f8-7aaf-4897-aae9-c01c97c2f432')
+        self.orgUnitId = 2709824
+        self.orgUnitGUID = UUID('ade98d84-e8a4-4418-9fac-9865f1d854eb')
         self.client = None
         self.country_id = None
         self.initClient()
