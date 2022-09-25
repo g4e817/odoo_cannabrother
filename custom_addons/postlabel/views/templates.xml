@@ -69,6 +69,8 @@
 
 
                 <button name="action_cancel" position="after">
+
+                    <button name="action_done" string="Action Done" type="object"/>
                     <button name="action_assign_user" string="Mir zuweisen"
                             groups="base.group_user" type="object"
                             attrs="{'invisible' : ['|', ('picking_type_code', '!=', 'outgoing'), ('assignee_status', '!=', 'open')]}"/>
@@ -251,5 +253,46 @@
 
         <menuitem action="action_performendofday" id="menu_performendofday_tree_view" parent="stock.menu_warehouse_report" sequence="151"/>
 
+    <record id="postlabel_config_settings_view_form" model="ir.ui.view">
+            <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+            <field name="model">res.config.settings</field>
+            <field name="arch" type="xml">
+                <xpath expr="//h2[@id='schedule_info']" position="before">
+                    <h2>Postlabel</h2>
+                     <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <label for="post_wsdl_url" string="WSDL Url"/>
+                            <div class="text-muted">
+                                Stelle eine WSDL Url von der Post ein (e.g. https://plc.post.at/Post.Webservice/ShippingService.svc?WSDL)
+                            </div>
+                            <field name="post_wsdl_url"/>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <label for="post_client_id" string="Post Client ID"/>
+                            <div class="text-muted">
+                                Stelle eine Post Client ID ein
+                            </div>
+                            <field name="post_client_id"/>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <label for="post_org_unit_id" string="Post Org Unit ID"/>
+                            <div class="text-muted">
+                                Stelle eine Post Org Unit ID ein
+                            </div>
+                            <field name="post_org_unit_id"/>
+                        </div>
+
+                         <div class="col-12 col-lg-6 o_setting_box">
+                            <label for="post_org_unit_guid" string="Post Org Unit GUID"/>
+                            <div class="text-muted">
+                                Stelle eine Post Org Unit GUID ein
+                            </div>
+                            <field name="post_org_unit_guid"/>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+    </record>
     </data>
 </odoo>

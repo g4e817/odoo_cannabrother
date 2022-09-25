@@ -1,31 +1,28 @@
 <odoo>
     <data>
         <record id="tracking_code_email_template" model="mail.template">
-                    <field name="name">Tracking Url Report</field>
+                    <field name="name">Bestellbenachrichtigung</field>
                     <field name="auto_delete" eval="True"/>
                     <field name="model_id" ref="postlabel.model_stock_picking"/>
                     <field name="lang">${object.lang}</field>
-                    <field name="report_name">
-                        Tracking Url
+                    <field name="subject">
+                        Deine Bestellung ist auf dem Weg
                     </field>
-                    <field name="body_html"><![CDATA[
-                    % set partner_id = ctx.get('partner_id')
-                    % set tracking_url = ctx.get('tracking_url')
-                    % set gender = ctx.get('gender')
-                    % set product_ids = ctx.get('product_ids')
+                    <field name="report_name">
+                        Bestellbenachrichtigung
+                    </field>
+                    <field name="body_html" type="html">
                     <div>
-                    <p>Guten Tag ${gender} ${partner_id.name},</p>
-                    <br/>
-                    <p>Gerne informieren wir Sie, dass Ihre Bestellung heute unser Lager verlassen hat und zu Ihnen per Post unterwegs ist.
-                    Die Lieferung können Sie unter <a href="${tracking_url}">${tracking_url}</a> bequem verfolgen.</p>
-                    <br/>
-                    <p>Sollten wir Sie beim ersten und zweiten Zustellversuch nicht antreffen, wird Ihr Paket automatisch in Ihrer nächstgelegenen Poststelle hinterlegt und ist dort abholbereit.</p>
-                    <br/>
-                    <p>Wir wünschen Ihnen schon jetzt viel Freude mit Ihrer Bestellung.</p>
-                    <br/>
-                    <p>Mit freundlichen Grüßen,</p>
-                    <p>Ihr Team von Dr. Neuburger - Die Natur kann es | Naturpflanzenextrakte</p></div>
-        ]]></field>
+                        <p>Lieber Kunde,</p>
+                        <p>Vielen Dank für deine Bestellung. Dein Paket wurde soeben verpackt und an den Versanddienstleister übergeben.
+                        <br/>
+                        Die Lieferung kannst du unter <a t-att-href="ctx['tracking_url']"><span t-esc="ctx['tracking_url']"/></a> bequem verfolgen.</p>
+                        Anbei findest du die Rechnung. <br/>
+                        <p>Viel Spaß mit deinen Produkten,</p>
+
+                        <p>Lukas von Cannabrother.shop</p>
+                    </div>
+                </field>
         </record>
     </data>
 </odoo>

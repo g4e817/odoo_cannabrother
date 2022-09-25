@@ -5,17 +5,19 @@ CID_AT = 'AT'
 
 
 class ZeepWebServiceClient:
-    def __init__(self, is_production):
+    def __init__(self, env):
 
-        if is_production:
-            self.wsdl = 'https://plc.post.at/Post.Webservice/ShippingService.svc?WSDL'
-        else:
-            self.wsdl = 'https://abn-plc.post.at/DataService/Post.Webservice/ShippingService.svc?WSDL'
+        #if is_production:
+        self.wsdl = env['ir.config_parameter'].sudo().get_param('postlabel.post_wsdl_url')
+        #else:
+        #    self.wsdl = 'https://abn-plc.post.at/DataService/Post.Webservice/ShippingService.svc?WSDL'
 
 
-        self.clientId = 21229941
-        self.orgUnitId = 2709824
-        self.orgUnitGUID = UUID('ade98d84-e8a4-4418-9fac-9865f1d854eb')
+        self.clientId = env['ir.config_parameter'].sudo().get_param('postlabel.post_client_id')#21229941
+        self.orgUnitId = env['ir.config_parameter'].sudo().get_param('postlabel.post_org_unit_id')#2709824
+        self.orgUnitGUID = UUID(env['ir.config_parameter'].sudo().get_param('postlabel.post_org_unit_guid'))#UUID('ade98d84-e8a4-4418-9fac-9865f1d854eb')
+
+        print("\n\n", self.wsdl, self.clientId, self.orgUnitId, self.orgUnitGUID)
         self.client = None
         self.country_id = None
         self.initClient()

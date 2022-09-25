@@ -3,7 +3,7 @@
     'name': "Postlabel",
 
     'summary': """Generierung von Labels für Post.at""",
-
+    'license': 'OPL-1',
     'description': """
         Long description of module's purpose
     """,

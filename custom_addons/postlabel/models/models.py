@@ -3,11 +3,10 @@ import base64
 
 from odoo import _, models, fields, api, tools
 from .service import ZeepWebServiceClient
-#from ...queue_job.exception import FailedJobError
-#from ...queue_job.job import job, Job, STATES, DONE, FAILED
+# from ...queue_job.exception import FailedJobError
+# from ...queue_job.job import job, Job, STATES, DONE, FAILED
 from odoo.exceptions import except_orm
 import threading
-
 
 
 class Postlabel_collo_codes(models.Model):
@@ -94,7 +93,7 @@ class Postlabel_post_label(models.Model):
     # @job
     def label_generation(self):
         self.ensure_one()
-        client = ZeepWebServiceClient(self._check_environment_is_production())
+        client = ZeepWebServiceClient(self.env)
         # print(self.partner_id.country_id.code)
         # print(self.move_line_ids_without_package.product_id)
         company_id = self.company_id.partner_id
@@ -121,143 +120,85 @@ class Postlabel_post_label(models.Model):
             if attachments:
                 self.message_post(attachment_ids=attachments)
                 self.has_post_label = True
-                self.shipper_url = resObj.getTrackingUrl()#
+                self.shipper_url = resObj.getTrackingUrl()  #
                 self.createColloCode(resObj.getCode(self.id))
-                #self.action_print_post_label(post_label, shipping_document)
+                # self.action_print_post_label(post_label, shipping_document)
             return
-        
+
         raise except_orm("Fehler!", resObj.getErrorMessage())
 
+        # return
 
-           # return
-
-        #raise FailedJobError(resObj.getErrorMessage())
+        # raise FailedJobError(resObj.getErrorMessage())
 
     def action_post_label(self):
-        #labelJob = self.with_delay().label_generation()
-        #queueJob = Job.db_record_from_uuid(self.env, labelJob.uuid)
-        #self.queue_job_id = queueJob
+        # labelJob = self.with_delay().label_generation()
+        # queueJob = Job.db_record_from_uuid(self.env, labelJob.uuid)
+        # self.queue_job_id = queueJob
 
         with self._lock:
             if not self.has_post_label:
                 self.label_generation()
 
-        #queueJob._message_post_on_failure()
-
-        #print("\n", result, "\n")
-
-
-
-    #def action_scheduled_post_label(self):
-     #   # threaded_calculation = threading.Thread(target=YOUR_FN_NAME)
-        # threaded_calculation.start()
-    #    print("HIER POST LABEL")
-
-    #    picking = self.env['stock.picking'].search(['&', ('assignee_status', '=', 'in_work'),
-    #                                                ('has_post_label', '=', False)])
-        #print(picking)
-    #    for stock in picking:
-            #print("\n")
-            #print(stock.has_post_label)
-            #print(stock.assignee_status)
-            #print(stock.state)
-            #print("\n")
-    #        if not stock.has_post_label and stock.assignee_status == 'in_work':
-    #            client = ZeepWebServiceClient(self._check_environment_is_production())
-                # print(self.partner_id.country_id.code)
-                # print(self.move_line_ids_without_package.product_id)
-
-    #            oURecipientAddress = client.createOURecepientAddressWithResPartner(stock.partner_id)
-    #            resObj = client.importShipment(oURecipientAddress, stock.move_ids_without_package)
-    #            if not resObj.isErrorMessage():
-    #                attachments = []
-
-    #                post_label = resObj.getPdfData()
-
-    #                if post_label:
-    #                    name_post_label = 'post_label_' + stock.partner_id.name + '.pdf'
-    #                    attachments.append(stock.createAttachment(name_post_label, post_label))
-
-    #                shipping_document = resObj.getShipmentsDocument()
-
-    #                if shipping_document:
-    #                    name_shipping_document = 'shipping_document_' + stock.partner_id.name + '.pdf'
-    #                    attachments.append(stock.createAttachment(name_shipping_document, shipping_document))
-
-    #                if attachments:
-    #                    stock.message_post(attachment_ids=attachments)
-    #                    stock.has_post_label = True
-    #                    stock.shipper_url = resObj.getTrackingUrl()
-    #                    stock.createColloCode(resObj.getCode(stock.id))
-
-    #                    self.action_print_post_label(post_label, shipping_document)
-
-    #        return True
-
     def send_tracking_email(self):
-        #print("\n\n\n")
+        # print("\n\n\n")
         self.ensure_one()
-        move = self
-        #print(move)
-        ir_model_data = self.env['ir.model.data']
-        try:
-            template_id = ir_model_data.get_object_reference('postlabel', 'tracking_code_email_template')[
-                1]
-        except ValueError:
-            template_id = False
-        #print(template_id)
-        gender_id = move.partner_id.gender
-        gender = ''
-        
-        if gender_id == 'male':
-            gender = 'Herr'
-        elif gender_id == 'female':
-            gender = 'Frau'
-            
+        stock = self
+        # TODO Anhang fehlt und Message
         ctx = {
             'default_model': 'stock.picking',
-            'default_res_id': move.id,
+            'default_res_id': stock.id,
             'default_use_template': True,
             'default_template_id': self.env.ref('postlabel.tracking_code_email_template'),
             'web_base_url': self.env['ir.config_parameter'].sudo().get_param('web.base.url'),
             'force_email': True,
-            'partner_id': move.partner_id,
-            'gender': gender,
-            'tracking_url': move.shipper_url,
-            'product_ids': move.move_ids_without_package,
+            'partner_id': stock.partner_id,
+            'tracking_url': stock.shipper_url,
+            'product_ids': stock.move_ids_without_package,
         }
-        #print(ctx)
-        template = self.env['mail.template'].browse(template_id)
-        html_body = template.body_html
-        text = template.with_context(ctx)._render_template(html_body, 'stock.picking', move.id)
-        sender_id = self.env.company
-        compose = self.env['mail.mail'].create({
-            'subject': 'Ihre Dr. Neuburger Versandbenachrichtigung',
-            'email_to': move.partner_id.email,
-            'email_from': tools.formataddr((sender_id.name, sender_id.email)),
-            'body_html': text,
+        # print(ctx)
+        template = self.env.ref('postlabel.tracking_code_email_template')
+        sale_order = self.env['sale.order']
+        order = sale_order.search([('picking_ids', 'in', [stock.id])], limit=1)
+        if not order:
+            raise except_orm("Fehler!", "Es wurde kein zugehöriger Auftrag gefunden.")
+        elif not order.invoice_count > 0:
+            raise except_orm("Fehler!", "Es wurde noch keine Rechnung für den Auftrag {} erstellt.".format(order.name))
+        elif order.invoice_count > 1:
+            raise except_orm("Fehler!", "Der Auftrag {} besitzt mehr als eine Rechnung.".format(order.name))
+
+        invoice = order.invoice_ids[0]
+        print(invoice)
+        pdf = self.env.ref('account.account_invoices').with_context(
+            must_skip_send_to_printer=True
+        )._render_qweb_pdf([invoice.id])
+        b64_pdf = base64.b64encode(pdf[0])
+
+        print(b64_pdf)
+        ATTACHMENT_NAME = 'Rechnung-{}.pdf'.format(invoice.name)
+        attachment = self.env['ir.attachment'].create({
+            'name': ATTACHMENT_NAME,
+            'type': 'binary',
+            'datas': b64_pdf,
+            'store_fname': ATTACHMENT_NAME,
+            'mimetype': 'application/x-pdf'
         })
-        
-        compose.send()
-        subtype_id = self.env['mail.message.subtype'].search([('name', '=', 'Note')])
-        self.env['mail.message'].create({
-            'body': text,
-            'model': 'res.partner',
-            'message_type': 'comment',
-            'res_id': move.partner_id.id,
-            'subtype_id': subtype_id.id,
-        })
+
+        print(attachment)
+        template.attachment_ids = [(6, 0, [attachment.id])]
+        template.with_context(ctx).send_mail(stock.id)
 
     def action_done(self):
-
-        ret = super(Postlabel_post_label, self).action_done()
-
-        #if ret and self.carrier_id.id != 7: # TODO send tracking email to customer or via post.at
-        #    self.send_tracking_email()
+        self.send_tracking_email()
+        return True
+    def _send_confirmation_email(self):
+        pass
 
     def button_validate(self):
+        print("\n\n\nbutton_validate\n")
         self.ensure_one()
-        if not self.has_post_label and not self.carrier_id.id in [7, 10] and self.picking_type_code != 'incoming':
+        if not self.has_post_label and not self.carrier_id.product_id.default_code in [
+            'will_collect'] and self.picking_type_code != 'incoming':
             view = self.env.ref('postlabel.view_assignee_post_label')
             wiz = self.env['stock.assignee.user'].create({'user_id': self._uid, 'picking_id': self.id})
             return {
@@ -272,9 +213,11 @@ class Postlabel_post_label(models.Model):
                 'context': self.env.context,
             }
 
-        resp = super(Postlabel_post_label, self).button_validate()
-        return resp
-
+        ret = super(Postlabel_post_label, self).button_validate()
+        if ret is True and self.carrier_id.product_id.default_code != 'will_collect':
+            print("SEND TRACKING EMAIL", ret, self)
+            self.send_tracking_email()
+        return ret
     def delete_attachment_messages(self):
         attachments = self.env['ir.attachment'].search(
             [('res_id', '=', self.id)])
@@ -292,7 +235,7 @@ class Postlabel_post_label(models.Model):
     # @job
     def remove_post_label(self):
         self.ensure_one()
-        client = ZeepWebServiceClient(self._check_environment_is_production())
+        client = ZeepWebServiceClient(self.env)
         if self.has_post_label and self.collo_codes:
             codes = []
 
@@ -300,8 +243,8 @@ class Postlabel_post_label(models.Model):
                 codes.append(colloCodes.code)
 
             response = client.cancelShipments(codes)[0]
-            #print(response)
-            if response.CancelSuccessful: #or response.ErrorCode == 'SN#10020':
+            # print(response)
+            if response.CancelSuccessful:  # or response.ErrorCode == 'SN#10020':
                 # someone deleted is from post server ( Error Code )
                 self.has_post_label = False
                 self.shipper_url = None
@@ -314,9 +257,9 @@ class Postlabel_post_label(models.Model):
             raise except_orm("Fehler!", response.ErrorMessage)
 
     def action_cancel_shipment(self):
-        #removeLabelJob = self.with_delay().remove_post_label()
-        #queueJob = Job.db_record_from_uuid(self.env, removeLabelJob.uuid)
-        #self.queue_job_id = queueJob
+        # removeLabelJob = self.with_delay().remove_post_label()
+        # queueJob = Job.db_record_from_uuid(self.env, removeLabelJob.uuid)
+        # self.queue_job_id = queueJob
         return self.remove_post_label()
 
     def action_assign_user(self):
@@ -343,23 +286,23 @@ class Postlabel_post_label(models.Model):
 
     def get_shipping_attachment(self):
         names = []
-        #names.append('post_label_' + self.partner_id.name + '.pdf')
+        # names.append('post_label_' + self.partner_id.name + '.pdf')
         names.append('shipping_document_' + self.partner_id.name + '.pdf')
 
         attachment = self.env['ir.attachment'].search([('name', 'in', names), ('res_id', '=', self.id)], limit=1)
 
         print(attachment)
         return attachment
-    
+
     def get_label_printer(self):
         return self.env['printing.printer'].search([('system_name', '=', 'DYMO-Drucker')], limit=1)
 
     def get_normal_printer(self):
-         return self.env['printing.printer'].search([('system_name', '=', 'Ricoh-Drucker')], limit=1)
+        return self.env['printing.printer'].search([('system_name', '=', 'Ricoh-Drucker')], limit=1)
 
     def action_print_post_label(self, post_label=None, shipping_document=None):
         print("\n\nPrint Label\n\n")
-        
+
         attachment = self.get_post_label_attachment()
 
         if post_label:
@@ -387,13 +330,15 @@ class Postlabel_post_label(models.Model):
                 report = self.env["ir.actions.report"].search([], limit=1)
                 fileData = base64.b64decode(attachment)
                 printer.print_document(report, fileData, doc_format="pdf")
-        #else:
+        # else:
         #    raise except_orm("Fehler!", "Bitte überprüfe deine Druckereinstellungen in Odoo.")
+
 
 class EoriNrResCompany(models.Model):
     _inherit = "res.partner"
 
     eori_nr = fields.Char("EORI Nummer")
+
 
 class PerformEndOfDay(models.Model):
     _name = "stock.perform.end.of.day"
@@ -401,11 +346,10 @@ class PerformEndOfDay(models.Model):
     _order = "creation_date DESC, name DESC"
     pdf_file = fields.Binary(string='Tagesabschluss', attachment=True)
     name = fields.Char(string='Nummer')
-    
-    creation_date = fields.Date(string="Erstellungsdatum")
-    
-    file_name = fields.Char('Dateiname', default="Tagesabschluss.pdf")
 
+    creation_date = fields.Date(string="Erstellungsdatum")
+
+    file_name = fields.Char('Dateiname', default="Tagesabschluss.pdf")
 
 
 class DeliveryCarrier(models.Model):

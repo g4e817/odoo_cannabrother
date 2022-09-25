@@ -15,7 +15,7 @@ class Postlabel_stock_performendofday(models.TransientModel):
         return True if not web_base_url or any(x in web_base_url for x in localhost_names) else False
 
     def perform_end_of_day(self):
-        client = ZeepWebServiceClient(self._check_environment_is_production())
+        client = ZeepWebServiceClient(self.env)
         resObj = client.postPerformEndOfDay()
         base64pdf = False
         if not resObj.isErrorMessage():
