@@ -9,7 +9,7 @@ class AccountMoveSequence(models.Model):
 
     @api.model
     def create(self, vals):
-        if vals.get('name', _('New')) == _('New'):
+        if vals.get('name', _('New')) == _('New') and vals.get('move_type', None) == 'out_invoice':
             if 'invoice_date' in vals:
                 current_date = fields.Datetime.to_datetime(vals['invoice_date'])
             else:
