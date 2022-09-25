@@ -215,7 +215,6 @@ class Postlabel_post_label(models.Model):
 
         ret = super(Postlabel_post_label, self).button_validate()
         if ret is True and self.carrier_id.product_id.default_code != 'will_collect':
-            print("SEND TRACKING EMAIL", ret, self)
             self.send_tracking_email()
         return ret
     def delete_attachment_messages(self):

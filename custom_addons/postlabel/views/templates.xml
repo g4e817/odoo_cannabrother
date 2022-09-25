@@ -70,7 +70,7 @@
 
                 <button name="action_cancel" position="after">
 
-                    <button name="action_done" string="Action Done" type="object"/>
+                    <button name="action_done" string="Erneut senden" type="object"/>
                     <button name="action_assign_user" string="Mir zuweisen"
                             groups="base.group_user" type="object"
                             attrs="{'invisible' : ['|', ('picking_type_code', '!=', 'outgoing'), ('assignee_status', '!=', 'open')]}"/>

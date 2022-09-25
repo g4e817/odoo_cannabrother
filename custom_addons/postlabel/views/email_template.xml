@@ -13,7 +13,7 @@
                     </field>
                     <field name="body_html" type="html">
                     <div>
-                        <p>Lieber Kunde,</p>
+                        <p>Lieber/e Kunde/in,</p>
                         <p>Vielen Dank für deine Bestellung. Dein Paket wurde soeben verpackt und an den Versanddienstleister übergeben.
                         <br/>
                         Die Lieferung kannst du unter <a t-att-href="ctx['tracking_url']"><span t-esc="ctx['tracking_url']"/></a> bequem verfolgen.</p>
