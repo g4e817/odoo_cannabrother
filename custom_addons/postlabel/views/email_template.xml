@@ -5,12 +5,8 @@
                     <field name="auto_delete" eval="True"/>
                     <field name="model_id" ref="postlabel.model_stock_picking"/>
                     <field name="lang">${object.lang}</field>
-                    <field name="subject">
-                        Deine Bestellung ist auf dem Weg
-                    </field>
-                    <field name="report_name">
-                        Bestellbenachrichtigung
-                    </field>
+                    <field name="subject">Deine Bestellung ist auf dem Weg</field>
+                    <field name="report_name">Bestellbenachrichtigung</field>
                     <field name="body_html" type="html">
                     <div>
                         <p>Lieber/e Kunde/in,</p>
