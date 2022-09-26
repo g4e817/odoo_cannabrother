@@ -625,8 +625,12 @@ class SaleOrder(models.Model):
                 line_discount = tax_discount + line_discount
             discount_line = self.create_woo_order_line(False, woo_instance.discount_product_id, 1, line_discount * -1,
                                                        taxes, tax_included, woo_instance)
+            if int(line_discount) == line_discount:
+                line_discount_str = int(line_discount)
+            else:
+                line_discount_str = str(line_discount).replace('.', ',')
 
-            discount_line.write({'name': 'Discount for ' + order_line_id.name})
+            discount_line.write({'name': '{}% Rabatt für '.format(line_discount_str) + order_line_id.name})
             if woo_instance.apply_tax == 'odoo_tax':
                 discount_line.tax_id = order_line_id.tax_id
         return discount_line

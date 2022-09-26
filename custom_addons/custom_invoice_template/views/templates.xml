@@ -167,7 +167,7 @@
             <xpath expr="//p[@name='payment_communication']" position="replace">
             </xpath>
             <xpath expr="//tbody//tr//td[@name='account_invoice_line_name']" position="replace">
-               <td><span t-esc="line.name[line.name.find('] ')+1:]" t-options="{'widget': 'text'}"/>
+               <td><span t-esc="line.name[:line.name.find(' [')+1] + line.name[line.name.find('] ')+1:]" t-options="{'widget': 'text'}"/>
                 </td>
             </xpath>
 
