@@ -94,8 +94,6 @@ class Postlabel_post_label(models.Model):
     def label_generation(self):
         self.ensure_one()
         client = ZeepWebServiceClient(self.env)
-        # print(self.partner_id.country_id.code)
-        # print(self.move_line_ids_without_package.product_id)
         company_id = self.company_id.partner_id
         if not company_id:
             company_id = self.env.user.company_id.partner_id
@@ -141,7 +139,6 @@ class Postlabel_post_label(models.Model):
                 self.label_generation()
 
     def send_tracking_email(self):
-        # print("\n\n\n")
         self.ensure_one()
         stock = self
         # TODO Anhang fehlt und Message
@@ -156,7 +153,6 @@ class Postlabel_post_label(models.Model):
             'tracking_url': stock.shipper_url,
             'product_ids': stock.move_ids_without_package,
         }
-        # print(ctx)
         template = self.env.ref('postlabel.tracking_code_email_template')
         sale_order = self.env['sale.order']
         order = sale_order.search([('picking_ids', 'in', [stock.id])], limit=1)
@@ -168,13 +164,10 @@ class Postlabel_post_label(models.Model):
             raise except_orm("Fehler!", "Der Auftrag {} besitzt mehr als eine Rechnung.".format(order.name))
 
         invoice = order.invoice_ids[0]
-        print(invoice)
         pdf = self.env.ref('account.account_invoices').with_context(
             must_skip_send_to_printer=True
         )._render_qweb_pdf([invoice.id])
         b64_pdf = base64.b64encode(pdf[0])
-
-        print(b64_pdf)
         ATTACHMENT_NAME = 'Rechnung-{}.pdf'.format(invoice.name)
         attachment = self.env['ir.attachment'].create({
             'name': ATTACHMENT_NAME,
@@ -184,7 +177,6 @@ class Postlabel_post_label(models.Model):
             'mimetype': 'application/x-pdf'
         })
 
-        print(attachment)
         template.attachment_ids = [(6, 0, [attachment.id])]
         template.with_context(ctx).send_mail(stock.id)
 
@@ -195,7 +187,6 @@ class Postlabel_post_label(models.Model):
         pass
 
     def button_validate(self):
-        print("\n\n\nbutton_validate\n")
         self.ensure_one()
         if not self.has_post_label and not self.carrier_id.product_id.default_code in [
             'will_collect'] and self.picking_type_code != 'incoming':
@@ -242,8 +233,6 @@ class Postlabel_post_label(models.Model):
                 codes.append(colloCodes.code)
 
             response = client.cancelShipments(codes)[0]
-            print("CANCEL SHIPMENT", response)
-            # print(response)
             if response.CancelSuccessful:  # or response.ErrorCode == 'SN#10020':
                 # someone deleted is from post server ( Error Code )
                 self.has_post_label = False
@@ -281,7 +270,6 @@ class Postlabel_post_label(models.Model):
 
         attachments = self.env['ir.attachment'].search([('name', 'in', names), ('res_id', '=', self.id)], limit=1)
 
-        print(attachments)
         return attachments
 
     def get_shipping_attachment(self):
@@ -290,8 +278,6 @@ class Postlabel_post_label(models.Model):
         names.append('shipping_document_' + self.partner_id.name + '.pdf')
 
         attachment = self.env['ir.attachment'].search([('name', 'in', names), ('res_id', '=', self.id)], limit=1)
-
-        print(attachment)
         return attachment
 
     def get_label_printer(self):
@@ -301,8 +287,6 @@ class Postlabel_post_label(models.Model):
         return self.env['printing.printer'].search([('system_name', '=', 'Ricoh-Drucker')], limit=1)
 
     def action_print_post_label(self, post_label=None, shipping_document=None):
-        print("\n\nPrint Label\n\n")
-
         attachment = self.get_post_label_attachment()
 
         if post_label:

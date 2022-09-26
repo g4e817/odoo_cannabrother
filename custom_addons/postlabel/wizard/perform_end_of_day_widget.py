@@ -38,9 +38,3 @@ class Postlabel_stock_performendofday(models.TransientModel):
             }
 
             self.env['stock.perform.end.of.day'].create(performendofday_vals)
-            
-
-        
-        #print("\n\nTEST PROCESS: " + self.picking_id.name)
-        #print("\n\n")
-        #return False

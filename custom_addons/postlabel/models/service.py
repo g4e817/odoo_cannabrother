@@ -106,15 +106,6 @@ class ZeepWebServiceClient:
         collo_article_row_array = collo_article_row_array_type()
         for move in moveLine:
             product = move.product_id
-
-            #print("\n")
-            #print("ArticleName:", product.name)
-            #print("Quantity:", move.product_uom_qty)
-            #print("HSTariffNumber:", int(product.hs_code_id.hs_code))
-            #print("ValueOfGoodsPerUnit:", product.lst_price)
-            #print("ConsumerUnitNetWeight:", product.weight)
-            #print("\n")
-            
             collo_article_row_type = client.get_type('ns1:ColloArticleRow')
             
             collo_article_row = collo_article_row_type(ArticleName=product.name,
@@ -165,7 +156,6 @@ class ZeepWebServiceClient:
         client = self.client
         shipment_row = self.createShipmentRow(oUShipperAddress, oURecipientAddress, moveLine)
         response = client.service.ImportShipment(row=shipment_row)
-        #print(response)
         return ImportShipmentResult(response)
 
     def postPerformEndOfDay(self):
@@ -174,7 +164,6 @@ class ZeepWebServiceClient:
         response = client.service.PerformEndOfDay(clientID=self.clientId,
                                                 orgUnitID=self.orgUnitId,
                                                 orgUnitGuid=self.orgUnitGUID)
-        #print(response)
         return PerformEndOfDayResult(response)
 
     def createCancelShipment(self, codes):
@@ -183,11 +172,6 @@ class ZeepWebServiceClient:
         number = codes[0]
         cancel_shipment_row_array_type = client.get_type('ns1:ArrayOfCancelShipmentRow')
         cancel_shipment_row_type = client.get_type('ns1:CancelShipmentRow')
-        
-        #print('\n\nCOLLO CODES\n\n', codes, '\n')
-        
-        #for i in range(0, )
-        #print("\n", number, codes, self.clientId, self.orgUnitId, self.orgUnitGUID, "\n")
         cancel_shipment_row = cancel_shipment_row_type(ClientID=self.clientId,
                                                        OrgUnitID=self.orgUnitId,
                                                        OrgUnitGuid=self.orgUnitGUID,

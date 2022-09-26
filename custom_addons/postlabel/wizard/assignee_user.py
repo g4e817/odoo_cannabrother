@@ -12,6 +12,3 @@ class Postlabel_stock_assignee_user(models.TransientModel):
     def process(self):
         self.picking_id.action_assign_user()
         return self.picking_id.action_post_label()
-        #print("\n\nTEST PROCESS: " + self.picking_id.name)
-        #print("\n\n")
-        #return False
