@@ -163,6 +163,11 @@ class Postlabel_post_label(models.Model):
         elif order.invoice_count > 1:
             raise except_orm("Fehler!", "Der Auftrag {} besitzt mehr als eine Rechnung.".format(order.name))
 
+        partner_id = order.partner_id
+
+        if not partner_id.email or partner_id.email == '':
+            raise except_orm("Fehler!", "Der Kunde {} hat leider keine E-Mail.".format(partner_id.name))
+
         invoice = order.invoice_ids[0]
         pdf = self.env.ref('account.account_invoices').with_context(
             must_skip_send_to_printer=True
@@ -176,9 +181,11 @@ class Postlabel_post_label(models.Model):
             'store_fname': ATTACHMENT_NAME,
             'mimetype': 'application/x-pdf'
         })
-
+        email_values = {
+            'recipient_ids': [(6, 0, [partner_id.id])]
+        }
         template.attachment_ids = [(6, 0, [attachment.id])]
-        template.with_context(ctx).send_mail(stock.id)
+        template.with_context(ctx).send_mail(stock.id, email_values=email_values)
 
     def action_done(self):
         self.send_tracking_email()
