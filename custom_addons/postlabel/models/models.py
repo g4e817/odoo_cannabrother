@@ -149,6 +149,7 @@ class Postlabel_post_label(models.Model):
             'default_template_id': self.env.ref('postlabel.tracking_code_email_template'),
             'web_base_url': self.env['ir.config_parameter'].sudo().get_param('web.base.url'),
             'force_email': True,
+            'auto_delete': False,
             'partner_id': stock.partner_id,
             'tracking_url': stock.shipper_url,
             'product_ids': stock.move_ids_without_package,
@@ -182,7 +183,8 @@ class Postlabel_post_label(models.Model):
             'mimetype': 'application/x-pdf'
         })
         email_values = {
-            'recipient_ids': [(6, 0, [partner_id.id])]
+            'recipient_ids': [(6, 0, [partner_id.id])],
+            'auto_delete': False
         }
         template.attachment_ids = [(6, 0, [attachment.id])]
         template.with_context(ctx).send_mail(stock.id, email_values=email_values)
