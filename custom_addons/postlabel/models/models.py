@@ -242,6 +242,7 @@ class Postlabel_post_label(models.Model):
                 codes.append(colloCodes.code)
 
             response = client.cancelShipments(codes)[0]
+            print("CANCEL SHIPMENT", response)
             # print(response)
             if response.CancelSuccessful:  # or response.ErrorCode == 'SN#10020':
                 # someone deleted is from post server ( Error Code )
