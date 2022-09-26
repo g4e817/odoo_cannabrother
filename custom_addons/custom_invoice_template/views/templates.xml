@@ -162,6 +162,8 @@
             </xpath>
             <xpath expr="//div[@name='origin']" position="replace">
             </xpath>
+            <xpath expr="//div[@name='reference']" position="replace">
+            </xpath>
             <xpath expr="//p[@name='payment_communication']" position="replace">
             </xpath>
             <xpath expr="//tbody//tr//td[@name='account_invoice_line_name']" position="replace">
