@@ -1,5 +1,4 @@
 <odoo>
-    <data>
          <record id="custom_sale_auto_workflow_sale_workflow_process" model="ir.ui.view">
             <field name="model">sale.workflow.process.ept</field>
             <field name="inherit_id" ref="common_connector_library.sale_workflow_process_view_form" />
@@ -48,5 +47,4 @@
                     </field>
             </field>
         </record>
-    </data>
 </odoo>

@@ -1,5 +1,4 @@
 <odoo>
-    <data>
         <record id="invoice_paperformat_euro" model="report.paperformat">
             <field name="name">Invoice A4</field>
             <field name="default" eval="True"/>
@@ -183,12 +182,14 @@
 
             <xpath expr="//p[@name='payment_communication']" position="replace">
                 <t t-if="o.move_type == 'out_invoice' and o.payment_reference and o.payment_state not in ['paid', 'reversed', 'invoice_legacy']">
-                    <t name="payment_communication">
-                        <p>
-                            Bitte benutzen Sie den folgenden Verwendungszweck für Ihre Zahlung: <b><span t-field="o.payment_reference"/></b>
-                        </p>
-                        <p><strong>Bankkonto:</strong> <span t-esc="bank_obj.bank_id.name"/> (<span t-esc="bank_obj.bank_id.bic"/>) <span t-esc="bank_obj.acc_number"/></p>
-                    </t>
+                    <div>
+                        <t name="payment_communication">
+                            <p>
+                                Bitte benutzen Sie den folgenden Verwendungszweck für Ihre Zahlung: <b><span t-field="o.payment_reference"/></b>
+                            </p>
+                            <p><strong>Bankkonto:</strong> <span t-esc="bank_obj.bank_id.name"/> (<span t-esc="bank_obj.bank_id.bic"/>) <span t-esc="bank_obj.acc_number"/></p>
+                        </t>
+                    </div>
                 </t>
             </xpath>
             <xpath expr="//tbody//tr//td[@name='account_invoice_line_name']" position="replace">
@@ -218,6 +219,4 @@
                 </button>
             </field>
          </record>
-
-    </data>
 </odoo>
