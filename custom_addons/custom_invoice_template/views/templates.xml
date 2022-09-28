@@ -148,6 +148,22 @@
         </template>
 
         <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+            <xpath expr="//div[hasclass('page')]/div[1]" position="before">
+                <t t-if="'agent_id' in o.fields_get()">
+                    <t t-set= "bank_obj" t-value="o.company_id.partner_id.bank_ids.filtered(lambda bank: bank.bank_id.country == o.agent_id.country_id)" />
+                </t>
+                <t t-elif="'partner_id' in o.fields_get()">
+                    <t t-set= "bank_obj" t-value="o.company_id.partner_id.bank_ids.filtered(lambda bank: bank.bank_id.country == o.partner_id.country_id)" />
+                </t>
+                <t  t-elif="'partner_shipping_id' in o.fields_get()">
+                    <t t-set= "bank_obj" t-value="o.company_id.partner_id.bank_ids.filtered(lambda bank: bank.bank_id.country == o.partner_shipping_id.country_id)" />
+                </t>
+
+
+                <t t-if="not bank_obj">
+                    <t t-set="bank_obj" t-value="o.company_id.partner_id.bank_ids.filtered(lambda bank: bank.bank_id.country.code == 'AT')" />
+                </t>
+            </xpath>
             <xpath expr="//thead//th[@name='th_quantity']" position="replace">
             </xpath>
             <xpath expr="//tbody//tr//td[2]" position="replace">
@@ -164,7 +180,16 @@
             </xpath>
             <xpath expr="//div[@name='reference']" position="replace">
             </xpath>
+
             <xpath expr="//p[@name='payment_communication']" position="replace">
+                <t t-if="o.move_type == 'out_invoice' and o.payment_reference and o.payment_state not in ['paid', 'reversed', 'invoice_legacy']">
+                    <t name="payment_communication">
+                        <p>
+                            Bitte benutzen Sie den folgenden Verwendungszweck für Ihre Zahlung: <b><span t-field="o.payment_reference"/></b>
+                        </p>
+                        <p><strong>Bankkonto:</strong> <span t-esc="bank_obj.bank_id.name"/> (<span t-esc="bank_obj.bank_id.bic"/>) <span t-esc="bank_obj.acc_number"/></p>
+                    </t>
+                </t>
             </xpath>
             <xpath expr="//tbody//tr//td[@name='account_invoice_line_name']" position="replace">
                <td><span t-esc="line.name[:line.name.find(' [')+1] + line.name[line.name.find('] ')+1:]" t-options="{'widget': 'text'}"/>
