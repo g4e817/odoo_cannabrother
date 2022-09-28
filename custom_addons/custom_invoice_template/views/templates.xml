@@ -183,18 +183,22 @@
             <xpath expr="//p[@name='payment_term']" position="replace">
                 <t t-if="o.move_type == 'out_invoice' and o.payment_reference and o.payment_state not in ['paid', 'reversed', 'invoice_legacy']">
                     <div>
-                        <p t-if="o.invoice_payment_term_id" name="payment_term">
-                            <span t-field="o.invoice_payment_term_id.note"/>
-                        </p>
+                        <t t-if="o.invoice_payment_term_id" >
+                            <p name="payment_term">
+                                <span t-field="o.invoice_payment_term_id.note"/>
+                            </p>
+                        </t>
                         <p name="payment_communication">
                             Bitte benutzen Sie den folgenden Verwendungszweck für Ihre Zahlung: <b><span t-field="o.payment_reference"/></b>
                         </p>
+                        <p t-if="o.invoice_payment_term_id" />
                     </div>
                 </t>
             </xpath>
 
             <xpath expr="//p[@name='payment_communication']" position="replace">
             </xpath>
+
             <xpath expr="//tbody//tr//td[@name='account_invoice_line_name']" position="replace">
                <td><span t-esc="line.name[:line.name.find(' [')+1] + line.name[line.name.find('] ')+1:]" t-options="{'widget': 'text'}"/>
                 </td>
