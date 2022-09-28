@@ -42,19 +42,6 @@ class SaleOrder(models.Model):
             if payment_mode:
                 order.payment_mode_id = payment_mode
 
-    # @api.onchange("auto_workflow_process_id")
-    # def onchange_auto_workflow_process_id(self):
-    #    account_payment_mode = self.env["account.payment.mode"]
-    #    for order in self:
-    #        if order.auto_workflow_process_id:
-    #            payment_mode_id = \
-    #                account_payment_mode.search([("auto_workflow_process_id", '=', order.auto_workflow_process_id.id)],
-    #                                            limit=1)
-    #            order.payment_mode_id = payment_mode_id
-    #            print(payment_mode_id)
-    #        else:
-    #            order.payment_mode_id = None
-
 
 class AccountMove(models.Model):
     _inherit = "account.move"

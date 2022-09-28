@@ -66,17 +66,21 @@ class ZeepWebServiceClient:
         ou_recipient_address_type = client.get_type('ns1:AddressRow')
         self.country_id = res_partner.country_id.code
         company_name = res_partner.company_name
+        street = res_partner.street
+        if res_partner.street2 and res_partner.street2 != '':
+            street = street + ' ' + res_partner.street2
+
         if company_name:
             ou_recipient_address = ou_recipient_address_type(Name1=company_name,
                                                             Name2=res_partner.name,
                                                             City=res_partner.city,
-                                                            AddressLine1=res_partner.street,
+                                                            AddressLine1=street,
                                                             PostalCode=res_partner.zip,
                                                             CountryID=self.country_id)
         else:
             ou_recipient_address = ou_recipient_address_type(Name1=res_partner.name,
                                                             City=res_partner.city,
-                                                            AddressLine1=res_partner.street,
+                                                            AddressLine1=street,
                                                             PostalCode=res_partner.zip,
                                                             CountryID=self.country_id)
 
