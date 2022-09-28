@@ -189,7 +189,7 @@
                             </p>
                         </t>
                         <p name="payment_communication">
-                            Bitte benutzen Sie den folgenden Verwendungszweck für Ihre Zahlung: <b><span t-field="o.payment_reference"/></b>
+                            Bitte benutzen Sie den folgenden Verwendungszweck für Ihre Zahlung: <b><span t-field="o.ref"/></b>
                         </p>
                         <p t-if="o.invoice_payment_term_id" />
                     </div>
