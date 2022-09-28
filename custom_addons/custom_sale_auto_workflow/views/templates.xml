@@ -1,4 +1,5 @@
 <odoo>
+    <data>
          <record id="custom_sale_auto_workflow_sale_workflow_process" model="ir.ui.view">
             <field name="model">sale.workflow.process.ept</field>
             <field name="inherit_id" ref="common_connector_library.sale_workflow_process_view_form" />
@@ -31,7 +32,7 @@
         </record>
 
         <template id="report_invoice_document" inherit_id="custom_invoice_template.report_invoice_document">
-            <xpath expr="//t[@name='payment_communication']" position="before">
+            <xpath expr="//p[@name='payment_term']" position="after">
                 <t t-if="o.payment_mode_id">
                     <br/><p>Zahlungsart: <b><span t-esc="o.payment_mode_id.name"/></b></p>
                 </t>
@@ -47,4 +48,5 @@
                     </field>
             </field>
         </record>
+    </data>
 </odoo>
