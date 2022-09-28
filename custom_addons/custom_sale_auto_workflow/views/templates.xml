@@ -32,9 +32,9 @@
         </record>
 
         <template id="report_invoice_document" inherit_id="custom_invoice_template.report_invoice_document">
-            <xpath expr="//p[@name='payment_term']" position="after">
+            <xpath expr="//t[@t-if='o.invoice_payment_term_id']" position="after">
                 <t t-if="o.payment_mode_id">
-                    <br/><p>Zahlungsart: <b><span t-esc="o.payment_mode_id.name"/></b></p>
+                    <p>Zahlungsart: <b><span t-esc="o.payment_mode_id.name"/></b></p>
                 </t>
             </xpath>
         </template>
