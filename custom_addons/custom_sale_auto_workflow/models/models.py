@@ -66,7 +66,6 @@ class AccountMove(models.Model):
         records = super(AccountMove, self).create(vals_list)
         for move in records:
             order = self.env["sale.order"].search([("invoice_ids", "in", [move.id])], limit=1)
-            print(order)
             move.auto_sale_order_id = order
         return records
 
