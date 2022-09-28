@@ -88,14 +88,14 @@
                                 style="font-family: ChaletBook; font-weight:bold; font-size:18px;" t-esc="company.website"/>-->
                             <!--<li itemprop="company.name">
                             </li>-->
-                            <li style="margin-top:5px">
+                           <!-- <li style="margin-top:5px">
                                 <a href="#" style="margin-right:5px;color:#000;">
                                     <i class="fa fa-facebook"></i>
                                 </a>
                                 <a href="#" style="color:#000;">
                                     <i class="fa fa-instagram"></i>
                                 </a>
-                            </li>
+                            </li>-->
                         </ul>
                     </div>
 
