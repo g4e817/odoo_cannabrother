@@ -6,7 +6,7 @@ class AccountPaymentMode(models.Model):
     _inherit = "account.payment.mode"
 
     auto_workflow_process_id = fields.Many2one("sale.workflow.process.ept", string="Workflow Process")
-
+    payment_term_id = fields.Many2one('account.payment.term', 'Zahlungsbedingung')
 
 class WooPaymentGateway(models.Model):
     _inherit = "woo.payment.gateway"
@@ -32,6 +32,8 @@ class SaleOrder(models.Model):
         for order in self:
             if order.payment_mode_id.auto_workflow_process_id:
                 order.auto_workflow_process_id = order.payment_mode_id.auto_workflow_process_id
+            if order.payment_mode_id.payment_term_id:
+                order.payment_term_id = order.payment_mode_id.payment_term_id
 
     @api.onchange("payment_gateway_id")
     def onchange_payment_gateway_id(self):
