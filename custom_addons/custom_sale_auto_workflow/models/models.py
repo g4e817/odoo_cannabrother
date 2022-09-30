@@ -27,7 +27,7 @@ class SaleOrder(models.Model):
     def create(self, vals):
         payment_gateway_id = vals.get("payment_gateway_id", None)
         if payment_gateway_id:
-            payment_gateway = self.env["woo.payment.gatewa"].search([("id", "=", payment_gateway_id)], limit=1)
+            payment_gateway = self.env["woo.payment.gateway"].search([("id", "=", payment_gateway_id)], limit=1)
             payment_mode = payment_gateway.payment_mode_id
             if payment_mode:
                 extra_vals = {"payment_mode_id": payment_mode.id}
