@@ -23,6 +23,21 @@ class WooPaymentGateway(models.Model):
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
+    @api.model
+    def create(self, vals):
+        payment_gateway_id = vals.get("payment_gateway_id", None)
+        if payment_gateway_id:
+            payment_gateway = self.env["woo.payment.gatewa"].search([("id", "=", payment_gateway_id)], limit=1)
+            payment_mode = payment_gateway.payment_mode_id
+            if payment_mode:
+                extra_vals = {"payment_mode_id": payment_mode.id}
+                if payment_mode.auto_workflow_process_id:
+                    extra_vals["auto_workflow_process_id"] = payment_mode.auto_workflow_process_id.id
+                if payment_mode.payment_term_id:
+                    extra_vals["payment_term_id"] = payment_mode.payment_term_id.id
+                vals.update(extra_vals)
+        return super(SaleOrder, self).create(vals)
+
     @api.depends("partner_id")
     def _compute_payment_mode(self):
         pass
