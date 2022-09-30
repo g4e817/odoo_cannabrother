@@ -184,7 +184,7 @@
 
 
             <xpath expr="//p[@name='payment_term']" position="replace">
-                <t t-if="o.move_type == 'out_invoice' and o.ref and o.payment_state not in ['paid', 'reversed', 'invoice_legacy']">
+                <t t-if="o.move_type == 'out_invoice' and o.ref and o.payment_mode_id and o.payment_mode_id.name == 'Auf Rechnung'">
                     <div>
                         <t t-if="o.invoice_payment_term_id" >
                             <p name="payment_term">

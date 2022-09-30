@@ -170,7 +170,7 @@ class Postlabel_post_label(models.Model):
             raise except_orm("Fehler!", "Der Kunde {} hat leider keine E-Mail.".format(partner_id.name))
 
         invoice = order.invoice_ids[0]
-        pdf = self.env.ref('account.account_invoices').with_context(
+        pdf = self.env.ref('account.account_invoices_without_payment').with_context(
             must_skip_send_to_printer=True
         )._render_qweb_pdf([invoice.id])
         b64_pdf = base64.b64encode(pdf[0])
